@@ -1,0 +1,159 @@
+/* body{
+  
+} */
+#content_main_div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    /* background-color: #eee2dc; */
+
+  }
+ .bilde{
+   display:block;
+   /* margin-left: 5%;
+   margin-right: 5%; */
+   width: 100%;
+   margin-top: 3%;
+   /* background-color: #eee2dc; */
+ }
+ .content_main_sub1{
+   position: relative;
+   float:left;
+ }
+ .content_main_sub1 h4{
+   font-weight: bold;
+   color: white;
+   font-size: 40px;
+   border-bottom: #84acb1 solid;
+   border-radius: 2px;
+   padding-bottom: 3%;
+ }
+ .content_main_sub1 p{
+     padding-top: 3%;
+     padding-bottom: 3%;
+ }
+ .text-block{
+   position: absolute;
+   top: 2%;
+   left: 5%;
+   background-color: #123c69 ;
+   /* background-color: #eee2dc; */
+   width: 40%;
+   text-align: center;
+   height: 103%;
+   padding-top:10%;
+  /* font-weight: lighter; */
+
+   color:white;
+
+   /* color: #017aa0; */
+   padding-left:1%;
+   padding-right: 1%;
+   opacity: 0.7;
+ }
+ .btn {
+    /* padding-top: 6%; */
+    border: 0;
+    background-color: #84acb1; /*Random farge på knappen*/
+    width: 205px;
+    height: 35px;
+    cursor: pointer;
+    color: #123c69;
+  }
+  .btn:hover{
+    transition: .4s ease;
+    font-weight: bold;
+    color:#123c69;
+  }
+  .btn a{
+      color: #123c69;
+  }
+  .btn a:hover{
+      text-decoration:none;
+  }
+
+ .nedover{
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+   width: 90%;
+   margin-top: 3%;
+   margin-bottom: 3%;
+   /* background-color: #eee2dc; */
+   background-color: black;
+   /* height:600px; */
+ }
+ .content_main_sub2{
+   float:left;
+   background-color: #ac3b61;
+   width: 49%;
+   height: 313px;
+   color: whitesmoke;
+   margin-bottom: 3%;
+
+ }
+ .content_main_sub3{
+   float:right;
+   background-color: #84acb1;
+   width: 49%;
+   height: 313px;
+   margin-bottom: 3%;
+   color:whitesmoke;
+ }
+ .graf{
+   /* float: right; */
+   width: 100%;
+   height:auto;
+   padding-left: 2%;
+   padding-top: 2%;
+   padding-bottom: 2%; 
+   padding-right: 2%;
+   /* overflow: auto; */
+  
+   
+ }
+ .tekstboks{
+   float: left;
+   padding-bottom: 2%;
+   padding-top: 2%;
+   padding-left: 2%;
+   padding-right: 2%;
+   width: 40%;
+   font-weight: lighter;
+   list-style-type: none;
+
+   /* font-family:fantasy; */
+
+   display: flex;
+   justify-content: center;
+   align-items: center; 
+   vertical-align: middle; 
+   overflow: auto; 
+   
+ }
+
+ .video{
+   float:right;
+   padding: 2% 2% 2% 2%;
+   width:100%;
+   height: 100%;
+ }
+ @media only screen and (max-width: 800px){
+  .content_main_sub2{
+    width:100%;
+    margin-bottom: 3%;
+  }
+.content_main_sub3{
+     float:left;
+     width:100%;
+  }
+  .text-block{
+    font-size: 10px;
+  }
+  .content_main_sub1 h4{
+  font-size:20px;
+  }
+
+}
+
