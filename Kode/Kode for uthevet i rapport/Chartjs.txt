@@ -10,6 +10,7 @@
 <script type="text/javascript"> // i JavaScript
 
   var ctx_acc = document.getElementById('accChart').getContext('2d'); // Legger canvas-elementet i en variabel 
+  var colors = ['#ac3b61', '#84acb1', '#eee2dc', '#123c69', '#017aa0', '#bbb2b5', '#d7a08b', '#bcb1b7']; // Farger som blir brukt for linjene
 
   var tid_hver_måling=[1,2,3,4,...]; // Tiden som en liste til plottet langs x-aksen 
   var data_fra_skyv=[10,32,322,44,...]; // Verdier fra målingene i en liste langs y-aksen
