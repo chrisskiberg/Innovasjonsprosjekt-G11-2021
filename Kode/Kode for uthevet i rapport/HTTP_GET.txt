@@ -1,0 +1,34 @@
+bool first_connect = false; // bool variabel med oversikt om CSRF-cookie er hentet
+
+// Variabler som lagrer CSRF-Token fra nettsiden
+String cookies = "";
+String x_CSRFToken="";
+
+// Header key for å hente CSRF-Token fra nettsiden
+const char* headerKeysGET[] =  {"Set-Cookie"};
+const size_t numberOfHeadersGET = sizeof(headerKeysGET)/sizeof(char*);
+
+// [...]
+
+void loop() { 
+  HTTPClient http; // Lager HTTPClient objekt som skal hente CSRF-Token fra nettsiden
+
+  http.collectHeaders(headerKeysGET, numberOfHeadersGET);  // Legger til nettaddressen og headers i HTTPclient objektet
+  http.begin("https://gruppe11.innovasjon.ed.ntnu.no/elsysapp/sensor/"); // Legger til nettaddressen i http som CSRF-Token skal bli hentet fra
+    
+  // Sjeker om ESP32 har koblet seg til tidligere, hvis ja hopp over
+  if (!first_connect){ 
+    int httpCode = http.GET();  // Proever aa hente CSRF-Token fra nettsidens
+    if (httpCode == 200) { //Sjekker om HTTP GET forespoerselen var en suksess
+    
+      // Lagrer CSRF-Token
+      cookies = (http.header(0)).substring(0, 74);
+      x_CSRFToken = (http.header(0)).substring(10, 74);
+      // [...]
+      
+    } else {
+      Serial.println("Error on HTTP request"); // Skriver feilmelding til seriell port
+    }  
+    first_connect = true; 
+  } else {[...]}
+}
