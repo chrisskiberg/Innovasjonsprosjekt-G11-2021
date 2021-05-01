@@ -7,7 +7,6 @@
 </div>
 
 
-
 <script type="text/javascript"> // i JavaScript
 
   var ctx_acc = document.getElementById('accChart').getContext('2d'); // Legger canvas-elementet i en variabel 
@@ -68,21 +67,19 @@
   
   // Funksjon for å legge til flere dataset i "accChart", Chart.js objektet chart.
   function addaccDataset(arr, name="default", color='#017aa0') { // Arr - liste over verdier for y-aksen
-  var newDataset = {
-      fill: false,
-      pointHoverRadius: 1,
-      pointRadius: 1,
-      label: name,
-      backgroundColor: color,
-      borderColor: color,
-      borderWidth: 2,
-      data: arr,
+    var newDataset = {
+        fill: false,
+        pointHoverRadius: 1,
+        pointRadius: 1,
+        label: name,
+        backgroundColor: color,
+        borderColor: color,
+        borderWidth: 2,
+        data: arr,
+    }
+
+    data_acc.datasets.push(newDataset); // Legger til data i data_acc
+    accChart.update(); // Oppdaterer accChart for å vise det nye datasetet
   }
-
-  data_acc.datasets.push(newDataset); // Legger til data i data_acc
-  accChart.update(); // Oppdaterer accChart for å vise det nye datasetet
-}
-
-
 
 </script>
