@@ -1,0 +1,7 @@
+// Henter dataene fra context på nettsiden 
+var xdata = (JSON.parse("{{xdata|escapejs}}"))["xdata"]; 
+var ydata = (JSON.parse("{{ydata|escapejs}}"))["ydata"]; 
+var zdata = (JSON.parse("{{zdata|escapejs}}"))["zdata"];
+var date = (JSON.parse("{{timestamp|escapejs}}"))["date"];
+
+// Dataene blir så brukt videre til beregne fart og plotte akselerasjonen og farten
