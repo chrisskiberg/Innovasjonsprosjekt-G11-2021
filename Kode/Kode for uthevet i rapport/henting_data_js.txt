@@ -1,8 +1,14 @@
-// Henter dataene fra context på nettsiden 
+// Henter dataene fra det siste skyvet fra context på nettsiden 
+
+// Henter akselerasjonsdata i x-, y- og z-retning 
 var xdata = (JSON.parse("{{xdata|escapejs}}"))["xdata"]; 
 var ydata = (JSON.parse("{{ydata|escapejs}}"))["ydata"]; 
 var zdata = (JSON.parse("{{zdata|escapejs}}"))["zdata"];
+
+// Henter dato og tidspunkt 
 var date = (JSON.parse("{{timestamp|escapejs}}"))["date"];
+
+// Henter id til det siste skyvet i databasen
 var last_id=(JSON.parse("{{id|escapejs}}"))["id"][0];
 
 // Dataene blir så brukt videre til beregne fart og plotte akselerasjonen og farten
