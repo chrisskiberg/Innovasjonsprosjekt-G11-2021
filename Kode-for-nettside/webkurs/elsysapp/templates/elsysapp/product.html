@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+    <title>Om produktet</title>
+    <link rel="stylesheet" href="{% static 'elsysapp/css/p.css' %}">
+</head>
+
+<body>
+    <div class="overskrift">
+        <center><h1>OM PRODUKTET<hr></h1></center>
+    </div>
+
+    <div class="nedover">
+        <div class="bilderamme">
+            <img class="bilde" src="{% static 'elsysapp/Img/produkt.png' %}">
+        </div>
+
+        <div class="tekst">
+            <p>WheeCurl hjelper deg med å analysere din curlingaktivitet slik at du kan identifisere de små endringene som kan gjøre en stor forskjell. Slik kommer du i gang med WheeCurl.</p>
+            <h5>Oppsett</h5>
+            <p>Din WheeCurl festes nederst på din curlingstikke ved hjelp av festebrakettene slik som på bildet. Ved oppstart vil WheeCurl koble seg til WiFi og kalibreres. Den må holdes stille frem til et grønt lys lyser i to sekunder for å indikere vellykket tilkobling og kalibrering. </p>
+            <h5>Slik bruker du din WheeCurl</h5>
+            <p>Etter vellykket oppstartsprosedyre er din WheeCurl klar til bruk. Når du er klar til å sette en stein, trykker du på startknappen. Et blått lys vil lyse i fem sekunder og din aktivitet loggføres. Det neste grønne lyset indikerer at dataene er sendt, og informasjonen om skyvet vil være tilgjengelige under mine økter.</p>
+        </div>
+    </div>
+</body>
+{% endblock %}

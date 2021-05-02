@@ -1,0 +1,86 @@
+<!-- I HTML -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> <!-- Kobler nettsiden til et CDN (content delivery network) med Chart.js, slik at nettsiden kan bruke Chart.js -->
+
+<div class="chart-container" style="margin:auto;width:85%;height:550px;"> <!-- div-element for å endre på posisjonen og størrelsen til diagrammet -->
+  <canvas id="accChart"></canvas>  <!-- canvas-elementet hvor data fra skyvet blir plottet -->
+</div>
+
+
+<script type="text/javascript"> // i JavaScript
+
+  var ctx_acc = document.getElementById('accChart').getContext('2d'); // Legger canvas-elementet i en variabel 
+  var colors = ['#ac3b61', '#84acb1', '#eee2dc', '#123c69', '#017aa0', '#bbb2b5', '#d7a08b', '#bcb1b7']; // Farger som blir brukt for linjene
+
+  var tid_hver_måling=[1,2,3,4,...]; // Tiden som en liste til plottet langs x-aksen 
+  var data_fra_skyv=[10,32,322,44,...]; // Verdier fra målingene i en liste langs y-aksen
+
+  var data_acc = { // variabel for data og utssende til diagrammet
+      labels: time,
+      datasets: [{
+        pointHoverRadius: 1.5,
+        pointRadius: 1.5,
+        fill: false,
+        label: "Måling 1",
+        backgroundColor: '#017aa0',
+        borderColor: '#017aa0',
+        borderWidth: 2,
+        data: data,
+      }]
+    };
+
+  // Et Chart.js objekt med informasjon om hvordan diagrammet skal se ut
+  var accChart = new Chart(ctx_acc,{ 
+    type: "line", // Forteller at Chart.js skal tegne et linjediagram
+    data: data_acc, // Legger til data og utseende fra variabelen data_acc
+      options:{
+        title: { // Forteller hvordan tittelen skal se ut
+          display: true,
+          text: 'Tittel', // Navn på tittel
+          fontSize: 25 
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { // Forteller hvordan aksene skal se ut
+          xAxes: [{ // Forteller hvordan x-aksen skal se ut
+            display:true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Tid [s]', // Navn på x-aksen
+              fontSize: 20
+            }
+          }],
+          yAxes: [{ // Froteller hvordan y-aksen skal se ut
+            ticks: {
+              beginAtZero: true
+            },
+            display:true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Akselerasjon [m/s²]', // Navn på y-aksen
+              fontSize: 20
+            }
+          }], 
+        }
+      }
+  });
+  
+  
+  // Funksjon for å legge til flere dataset i "accChart", Chart.js objektet chart.
+  function addaccDataset(arr, name="default", color='#017aa0') { // Arr - liste over verdier for y-aksen
+    var newDataset = {
+        fill: false,
+        pointHoverRadius: 1,
+        pointRadius: 1,
+        label: name,
+        backgroundColor: color,
+        borderColor: color,
+        borderWidth: 2,
+        data: arr,
+    }
+
+    data_acc.datasets.push(newDataset); // Legger til data i data_acc
+    accChart.update(); // Oppdaterer accChart for å vise det nye datasetet
+  }
+
+</script>

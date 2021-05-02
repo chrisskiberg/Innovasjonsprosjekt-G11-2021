@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+    <title>Om oss</title>
+    <link rel="stylesheet" href="{% static 'elsysapp/css/about.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> 
+    
+</head> 
+<center>
+    <div class="overskrift"><h1> OM OSS</h1></div>
+    <hr>
+  </center>
+  <div class="about-container"> <!-- Deler opp bildet og teksten i to kolonner-->
+    <div class="about-element">
+      <img class="AboutImage" src="https://www.eclass4learning.com/wp-content/uploads/2015/01/groups.jpg" alt="">
+    </div>
+    <div class="about-element">
+      <p>Vi er en gruppe på seks studenter ved studieprogrammet <i>Elektronisk systemdesign og innovasjon</i> ved <i>Norges teknisk-naturvitenskapelige universitet</i>, NTNU.
+        Våren 2021 fikk vi i samarbeid med <i>Norges Curlingforbund</i> i oppgave å lage noe nytt og nyttig for en curlingspiller ved hjelp av elektroniske system.
+      </p>
+      <p>Vi valgte å fokusere på rullestolspillerne i sporten. I rullestolcurling sendes steinen med en stikke fra sittende posisjon og det er ingen som koster underveis.
+        Da er skyvet ekstra viktig, og spillerne øver i utallige timer for å perfeksjonere teknikken. 
+      </p> 
+      <p>Med <b>Wheecurl</b> kan man enkelt loggføre og analysere farten til steinen i skyvet og bruke resultatene til å bli en bedre curlingspiller. 
+        </p>
+      
+      
+      <!-- <p> Curling er en idrett med mye potensiale for datainnsamling. Det er en sport med mye fokus på detaljer og statistikk, spesielt til trening.
+        Det kan være nyttig å måle hvordan en stein beveger seg i frasparket, hvordan steinenes individuelle egenskaper er eller å finne en tilpasset måte å analysere isoverflaten.
+        I tillegg kan automatisk posisjonsovervåking, poengberegning og tidtaking gjøre curlingarrangement lettere tilgjengelig for publikum og enklere å gjennomføre.
+      </p>
+      <p>Vi i gruppe 11 har bestemt oss for å fokusere på rullestolspillere i sporten. Disse spillerne er avhengig av støtet ved hjelp av en stikke skal være så nøyaktiv som mulig
+        for å få et bra resultat. Derfor har vi laget et treningsverktøy som hjelper spillerne med å analysere skyvene sine.
+      </p> -->
+      <p style="text-align:right">- Klem fra gruppe 11</p>
+    </div>
+  </div>
+
+  <center>
+    <h2>Gruppemedlemmer</h2>
+  </center>
+  <!-- kontaktkort for hver gruppemedlem. Fylles ut senere-->
+  <div class="group-container">
+    <div class="group-element">
+      <!-- <i class="group-icon fa fa-user-circle" style="font-size:50px"></i> -->
+      <img class="bilde" src="{% static 'elsysapp/Img/bowser.png' %}">
+      <div class="group-text">
+        <p><b>Simen</b><br><i>Gruppeleder</i></p>
+        <p>mail</p>
+        <p>linkedin</p>
+      </div>
+    </div>
+    <div class="group-element">
+      <!-- <i class="group-icon fa fa-user-circle" style="font-size:50px"></i> -->
+      <img class="bilde" src="{% static 'elsysapp/Img/Toad.png' %}">
+      <div class="group-text">
+        <p><b>Sheikha</b><br><i>Hardware</i></p>
+        <p>mail</p>
+        <p>linkedin</p>
+      </div>
+    </div>
+    <div class="group-element">
+      <!-- <i class="group-icon fa fa-user-circle" style="font-size:50px"></i> -->
+      <img class="bilde" src="{% static 'elsysapp/Img/shyguy.png' %}">
+      <div class="group-text">
+        <p><b>Christoffer</b><br><i>Software</i></p>
+        <p>mail</p>
+        <p>linkedin</p>
+      </div>
+    </div>
+    <div class="group-element">
+      <!-- <i class="group-icon fa fa-user-circle" style="font-size:50px"></i> -->
+      <img class="bilde" src="{% static 'elsysapp/Img/cheepcheep.png' %}">
+      <div class="group-text">
+        <p><b>Jenny</b><br><i>Webdesign</i></p>
+        <p>mail</p>
+        <p>linkedin</p>
+      </div>
+    </div>
+    <div class="group-element">
+      <!-- <i class="group-icon fa fa-user-circle" style="font-size:50px"></i> -->
+      <img class="bilde" src="{% static 'elsysapp/Img/lakitu.png' %}">
+      <div class="group-text">
+        <p><b>Øyvind</b><br><i>Software</i></p>
+        <p>mail</p>
+        <p>linkedin</p>
+      </div>
+    </div>
+    <div class="group-element">
+      <!-- <i class="group-icon fa fa-user-circle" style="font-size:50px"></i> -->
+      <img class="bilde" src="{% static 'elsysapp/Img/yoshi.png' %}">
+      <div class="group-text">
+        <p><b>Julie</b><br><i>Webdesign</i></p>
+        <p>mail</p>
+        <p>linkedin</p>
+      </div>
+    </div>
+
+  </div>
+
+
+
+{% endblock %}

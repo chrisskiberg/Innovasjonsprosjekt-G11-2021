@@ -1,0 +1,32 @@
+const char* ssid = ""; // Variabel med navnet på nettverket
+const char* password = ""; // Variabel med passordet til nettverket 
+int count_wifi=0; // Variabel som teller hvor mange forsøk som har blitt brukt på å koble seg til nettverket
+// [...]
+
+void setup() {
+  // [...]
+  WiFi.begin(ssid, password); // Forsøker å koble seg til WiFi
+  while (WiFi.status() != WL_CONNECTED) {  // while-løkke så lenge mikrokontrolleren ikke er koblet til Wifi
+    if (count_wifi>=5) { // Dersom den har brukt mer enn 5 forsøk, bytt å lyse mellom de grønne og blåe lyset
+      if (digitalRead(READY_PIN)) {
+        digitalWrite(READY_PIN, LOW);
+        digitalWrite(SUCCESS_PIN, HIGH);
+      } else {
+        digitalWrite(READY_PIN, HIGH);
+        digitalWrite(SUCCESS_PIN, LOW);
+      }
+    }  
+    
+    // Kode som forhindrer at mikrokontrolleren bare klarer å koble seg til annenhver gang den blir skrudd på
+    WiFi.persistent(false);
+    WiFi.disconnect();
+    WiFi.mode(WIFI_OFF);
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+
+   
+    count_wifi++; // øker antall forsøk
+    delay(2000); // venter 2 sekunder
+  } 
+  // [...]
+}

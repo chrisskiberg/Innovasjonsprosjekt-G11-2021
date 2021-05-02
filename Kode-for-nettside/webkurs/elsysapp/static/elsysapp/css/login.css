@@ -1,0 +1,69 @@
+body {
+    background: #84acb1; /* En random bakgrunnsfarge*/
+  }
+  .login-holder {
+    padding-top: 10%;
+  }
+  /*Styling av kolonner*/
+  .login-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    justify-content: center; 
+    column-gap: 20px;
+    padding: 20px 20px 20px 20px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 70%;
+    margin: 0 auto;
+  }
+  .login-element{
+    display: inline-block;
+  }
+  .login-container input {
+    width: 200px;
+    height: 20px;
+    background-color: #f2f2f2;
+  }
+  .login-input {
+    padding: 5px 5px 5px 5px;
+  }
+  /*BUTTON*/
+  .btn {
+    border: 0;
+    background-color: #66ffb3; /*Random farge på knappen*/
+    width: 205px;
+    height: 30px;
+    cursor: pointer;
+  }
+  .btn:hover{
+    background-color: #b3ffd7; /*Random hover-farge på knappen*/
+    transition: .4s ease;
+  }
+  .btn-div {
+    margin-top: 20px;
+    padding-top: 5px;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+  }
+  /*RESPONSIVE*/
+  @media screen and (max-width: 600px) { /* Ved mindre skjermer */
+    .login-container hr{
+      display: none;
+    }
+    .login-container {
+      grid-template-columns: auto; /* 1 kolonne i stedet for 2 */
+      width: 80%;
+    }
+    .login-element h3{
+      text-align: center;
+      padding-top: 20px;
+    }
+  }
+  @media screen and (min-width: 601px) and (max-width: 800px) {
+    .login-container {
+      width: 80%;
+  }
+  }  

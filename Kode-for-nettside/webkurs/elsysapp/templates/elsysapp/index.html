@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+  <title>Home</title>
+  <link rel="stylesheet" href="{% static 'elsysapp/css/home.css' %}">
+</head>
+<body>
+    <div id="content_main_div">
+      <div class="content_main_sub1">
+        <img class="bilde" src="{% static 'elsysapp/Img/rullestol2.jpg' %}" alt="Wheelchair">
+        <div class="text-block">
+          <center><h4>Forbedre teknikken med Wheecurl</h4>
+          <p>WheeCurl er analyseverktøyet for deg som vil ta curlingen til neste nivå.</p>
+          <p>Med Wheecurl kan du få info knyttet til din aktivitet og sammenligne med tidligere økter. </p></center>
+            
+          <div class="btn">
+            <a href="{% url 'sanntid_first' %}">Kom i gang</a>
+            <!-- <button onclick="registrer();"  type="submit" style="font-size:17px">PRØV SELV</button> -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="nedover">
+      <div class="content_main_sub2">
+        <center><p>Få info om resultatene dine</p></center>
+        <img class="graf" src="{% static 'elsysapp/Img/graf.jpg' %}">
+      </div>
+
+      <div class="content_main_sub3">
+       
+
+         <video class="video" width='100%' height= '100%' controls muted loop>
+          <source src="{% static 'elsysapp/videos/curling2.webm' type='video/webm' %}">
+          Your browser does not support the video tag.
+          </video>
+
+      </div>
+    </div>
+  </body>
+
+    {% endblock %}
