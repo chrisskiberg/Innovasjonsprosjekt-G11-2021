@@ -1,4 +1,4 @@
-// Henter dataene fra det siste skyvet fra context på nettsiden 
+// Henter dataene fra det siste skyvet fra context i HTML-filen med JavaScript
 
 // Henter akselerasjonsdata i x-, y- og z-retning 
 var xdata = (JSON.parse("{{xdata|escapejs}}"))["xdata"]; 
