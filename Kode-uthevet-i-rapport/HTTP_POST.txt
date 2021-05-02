@@ -13,20 +13,56 @@ void loop() {
     sensorData[0]="";
     sensorData[1]="";
     sensorData[2]="";    
-    sensorData[3]="";
-
+    
+    // [formaterere sensordataene for hver akse, for eksempel:"-547,-23,353,..." for x-aksen]
     for(int i = 0; i < num_of_measurements-1; i++){
-        // [formaterere sensordataene for hver akse, for eksempel:"-547,-23,353,..." for x-aksen]
+      if (x_acc[i]<0) {
+        sensorData[0] += "-" + String((-1)*x_acc[i], HEX) + ",";
+      } else {
+        sensorData[0] += String(x_acc[i], HEX) +",";
+      } 
+
+      if (y_acc[i]<0) {
+        sensorData[1] += "-" + String((-1)*y_acc[i], HEX) + ",";
+      } else {
+        sensorData[1] += String(y_acc[i], HEX) + ",";
+      } 
+
+      if (z_acc[i]<0) {
+        sensorData[2] += "-" + String((-1)*z_acc[i], HEX) + ",";
+      } else {
+        sensorData[2] += String(z_acc[i], HEX) + ",";
+      } 
     }
+    
+    if (x_acc[num_of_measurements-1]<0) {
+      sensorData[0] += "-"+ String((-1)*x_acc[num_of_measurements-1], HEX);
+    } else {
+      sensorData[0] += String(x_acc[num_of_measurements-1], HEX);
+    } 
+
+    if (y_acc[num_of_measurements-1]<0) {
+      sensorData[1] += "-"+ String((-1)*y_acc[num_of_measurements-1], HEX);
+    } else {
+      sensorData[1] += String(y_acc[num_of_measurements-1], HEX);
+    } 
+
+    if (z_acc[num_of_measurements-1]<0) {
+      sensorData[2] += "-"+ String((-1)*z_acc[num_of_measurements-1], HEX);
+    } else {
+      sensorData[2] += String(z_acc[num_of_measurements-1], HEX);
+    } 
+
+    
      num_of_measurements=0; // nullstiller antall maalinger
      sendPOST = true; // Variabel blir satt for aa sende sensordata
-     button_pushed=false;
+     button_pushed=false; // Knappen er ikke lenger trykt, det blir ikke lenger målt data
   }
 
 
   if (sendPOST){
     digitalWrite(READY_PIN, LOW); // Setter maalingslyset lavt
-    String postData="";
+    String postData=""; // Variabel som inneholder strengen av de formaterte dataene
     
     // Setter sensorData strengene sammen paa formatet "xdata=-547,-23,353,...&ydata=4547,4223,3534,...&zdata=2237,3453,2566,..."
     for ( int fieldNumber = 0; fieldNumber < numberOfHeadersPOST-1; fieldNumber++ ){
@@ -40,7 +76,6 @@ void loop() {
     postData += fieldName + "=" + fieldData;
 
     //Legger til noedvendige headers for HTTP POST forespoerselen
-    http.addHeader("Content-Type", "application/json");
     http.addHeader("X-CSRFToken", x_CSRFToken); 
     http.addHeader("referer", "https://gruppe11.innovasjon.ed.ntnu.no");
     http.addHeader("Cookie", cookies);
@@ -49,9 +84,11 @@ void loop() {
     int httpResponseCode = http.POST(postData);
     digitalWrite(SUCCESS_PIN, HIGH); // Lyse for å gi beskjed om at dataene er sendt
 
+    // variabler som forteller at de ikke skal bli sendt mer, og ikke ta flere målinger
     sendPOST = false;
     button_pushed = false;
-    delay(6000);
+
+    delay(6000); 
     digitalWrite(SUCCESS_PIN, LOW); // Slutter å lyse groent lys etter 6 sekunder
   }
 }
