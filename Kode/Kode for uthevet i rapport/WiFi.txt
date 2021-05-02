@@ -1,6 +1,6 @@
 const char* ssid = ""; // Variabel med navnet på nettverket
 const char* password = ""; // Variabel med passordet til nettverket 
-int count_wifi=0; // Variable som teller hvor mange forsøk som har blitt brukt på å koble seg til nettverket
+int count_wifi=0; // Variabel som teller hvor mange forsøk som har blitt brukt på å koble seg til nettverket
 // [...]
 
 void setup() {
