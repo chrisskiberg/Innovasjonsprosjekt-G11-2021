@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+  <title>Eldre økter</title>
+    <meta charset="utf-8">
+  {% comment %} <link rel="stylesheet" href="{% static 'graphtest.css' %}"> {% endcomment %}
+</head>
+
+<body>
+
+      <div style="margin:auto; width:50%;padding:10px;display: flex;flex-direction:column;text-align:center;justify-content: center;align-items:center;padding-bottom:30px;">
+    <h2>Sluttfart</h2>
+    <div class="card" style="width: 18rem;" >
+    <ul class="list-group list-group-flush" id="vel_card">
+        {% comment %} <li class="list-group-item">Måling 1: 2.1 m/s</li>
+        <li class="list-group-item">Måling 2: 1.8 m/s</li>
+        <li class="list-group-item">måling 3: 1.8 m/s</li>  {% endcomment %}
+    </ul>
+    </div>
+    </div>
+
+  <div class="chart-container" style="margin:auto;width:85%;height:550px;padding-bottom:20px;border:10px">
+  <canvas id="velChart"></canvas>
+  </div>
+
+  <div class="chart-container" style="margin:auto;width:85%;height:550px;">
+  <canvas id="accChart"></canvas>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script type="text/javascript">
+  
+  var body=document.querySelector("body");
+  console.log(body);
+  var ul=document.createElement("ul")
+
+  var xdata = (JSON.parse("{{xdata|escapejs}}"))["xdata"]; 
+  console.log(xdata);
+  var ydata = (JSON.parse("{{ydata|escapejs}}"))["ydata"]; 
+  console.log(ydata);
+  var zdata = (JSON.parse("{{zdata|escapejs}}"))["zdata"];
+  console.log(zdata);
+  var date = (JSON.parse("{{timestamp|escapejs}}"))["date"];
+  console.log(date);
+
+  
+  var xdata_last=xdata[0][0].split(',');
+  var ydata_last=ydata[0][0].split(',');
+  var zdata_last=zdata[0][0].split(',');
+  console.log(xdata_last);
+  console.log(ydata_last);
+  console.log(zdata_last);
+
+  xdata_arr=[];
+  ydata_arr=[];
+  zdata_arr=[];
+  
+  for (var i = 0; i <zdata.length; i++) {
+    xdata_arr.push(xdata[i][0].split(','));
+    ydata_arr.push(ydata[i][0].split(','));
+    zdata_arr.push(zdata[i][0].split(','));
+  }
+
+  /*
+  var xdata_true = xdata_last.map(function(element) {
+    return Number.parseInt(element,16)*0.00059857; // 9.807/16384
+    //return Number.parseInt(element,16);
+  });
+
+  var ydata_true = ydata_last.map(function(element) {
+    return Number.parseInt(element,16)*0.00059857; // 9.807/16384
+    //return Number.parseInt(element,16);
+  });
+
+  var zdata_true = zdata_last.map(function(element) {
+    return Number.parseInt(element,16)*0.00059857; // 9.807/16384
+    //return Number.parseInt(element,16);
+  });*/
+
+    var xdata_true=[];
+    var ydata_true=[];
+    var zdata_true=[];
+
+  var g=9.81;
+  var s=8192;
+
+
+    for (var i = 0; i <xdata_arr.length; i++) {
+    var xdata_true_i = xdata_arr[i].map(function(element) {
+      return Number.parseInt(element,16)*g/s; // 9.807/16384
+      //return Number.parseInt(element,16);
+    });
+
+    var ydata_true_i = ydata_arr[i].map(function(element) {
+      return Number.parseInt(element,16)*g/s; // 9.807/16384
+      //return Number.parseInt(element,16);
+    });
+
+    var zdata_true_i = zdata_arr[i].map(function(element) {
+      return Number.parseInt(element,16)*g/s; // 9.807/16384
+      //return Number.parseInt(element,16);
+    });
+    xdata_true.push(xdata_true_i);
+    ydata_true.push(ydata_true_i);
+    zdata_true.push(zdata_true_i);
+  }
+
+
+  // console.log(xdata_true);
+  //console.log(ydata_true);
+  // console.log(zdata_true);
+
+
+  time=[]
+  for (var i = 0; i <xdata_last.length; i++) {
+    time.push((i*1/62.5).toFixed(2)) // ganger dette med en konstant
+  }
+  console.log("time: " + time);
+
+  var f=62.5;
+
+  var vel_x_arr=[]
+  var vel_y_arr=[]
+  var vel_z_arr=[]
+  // finner farte i x-, y- og z-retning
+  for (var i = 0; i <xdata_true.length; i++) {
+      // vel_vec_arr_i=[[0,0,0]]
+      var vel_x_arr_i=[0];
+      var vel_y_arr_i=[0];
+      var vel_z_arr_i=[0];
+      var k=1;
+      for (var j = 0; j <xdata_true[i].length; j++) {
+        vel_x_arr_i.push(vel_x_arr_i[k-1]+xdata_true[i][j]/f);
+        vel_y_arr_i.push(vel_y_arr_i[k-1]+ydata_true[i][j]/f);
+        vel_z_arr_i.push(vel_z_arr_i[k-1]+zdata_true[i][j]/f);
+        //vel_vec_arr_i.push([vel_vec_arr_i[k-1][0]+xdata_true[i][j]/62.5, vel_vec_arr_i[k-1][1]+xdata_true[i][j]/62.5, vel_vec_arr_i[k-1][2]+xdata_true[i][j]/62.5])
+        k+=1;
+      }
+      // vel_vec_arr.push(vel_vec_arr_i);
+      vel_x_arr.push(vel_x_arr_i);
+      vel_y_arr.push(vel_y_arr_i);
+      vel_z_arr.push(vel_z_arr_i);
+  }
+
+
+  var vel_arr=[];
+  for (var i = 0; i <vel_x_arr.length; i++) {
+    vel_arr_i=[];
+    for (var j = 0; j <vel_x_arr[i].length; j++) {
+      vel_arr_i.push(Math.sqrt(vel_x_arr[i][j]*vel_x_arr[i][j]+vel_y_arr[i][j]*vel_y_arr[i][j]));
+    }
+    vel_arr.push(vel_arr_i);
+  }
+
+
+  {% comment %} var acc_arr=[];
+  for (var i = 0; i <xdata_true.length; i++) {
+    acc_arr_i=[];
+    for (var j = 0; j <xdata_true[i].length; j++) {
+      if (j>0 && vel_arr[i][j]-vel_arr[i][j-1]<0) {
+      acc_arr_i.push((-1)*Math.sqrt(xdata_true[i][j]*xdata_true[i][j]+ydata_true[i][j]*ydata_true[i][j]));
+      } else {
+        acc_arr_i.push(Math.sqrt(xdata_true[i][j]*xdata_true[i][j]+ydata_true[i][j]*ydata_true[i][j]));
+      }
+    }
+    acc_arr.push(acc_arr_i);
+  }
+
+
+
+
+  for (var i = 0; i <ydata_true.length; i++) {
+    ydata_true[i] = ydata_true[i].map(function(element) {
+      return Number.parseFloat(element).toFixed(4); // 9.807/16384
+      //return Number.parseInt(element,16);
+    });
+  }
+
+  for (var i = 0; i <vel_y_arr.length; i++) {
+  vel_y_arr[i] = vel_y_arr[i].map(function(element) {
+    return Number.parseFloat(element).toFixed(4); // 9.807/16384
+    //return Number.parseInt(element,16);
+  });
+} {% endcomment %}
+
+
+
+
+     var ctx_acc = document.getElementById('accChart').getContext('2d');
+    var data_acc = {
+      labels: time,
+      datasets: [{
+        pointHoverRadius: 1.5,
+        pointRadius: 1.5,
+        fill: false,
+        label: "Måling 1 (x)",
+        backgroundColor: 
+          '#017aa0',
+        borderColor: 
+          '#017aa0',
+        borderWidth: 2,
+        data: xdata_true[0],
+      }]
+    };
+
+    var accChart = new Chart(ctx_acc,{
+      type: "line",
+      data: data_acc,
+        options:{
+          title: {
+            display: true,
+            text: 'Akselerasjon',
+            fontSize: 25 
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+
+            xAxes: [{
+              display:true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Tid [s]',
+                fontSize: 20
+              }
+            }],
+
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              },
+              display:true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Akselerasjon [m/s²]',
+                fontSize: 20
+              }
+            }], 
+
+          }
+        }
+    });
+        // You create the new dataset `Vendas` with new data and color to differentiate
+    function addaccDataset(arr, name="default", color='#017aa0') {
+      var newDataset = {
+          fill: false,
+          pointHoverRadius: 1,
+          pointRadius: 1,
+          label: name,
+          backgroundColor: color,
+          borderColor: color,
+          borderWidth: 2,
+          data: arr,
+      }
+
+      // You add the newly created dataset to the list of `data`
+      data_acc.datasets.push(newDataset);
+      // You update the chart to take into account the new dataset
+      accChart.update();
+    }
+
+    var colors = ['#ac3b61', '#84acb1', '#eee2dc', '#123c69', '#017aa0', '#bbb2b5', '#d7a08b', '#bcb1b7']; 
+    addaccDataset(ydata_true[0], 'Måling '+String(1)+ "(y)",  "#017aa0");
+
+    for (i = 1; i < xdata_true.length; i++) {
+       addaccDataset(xdata_true[i], 'Måling '+String(i+1)+ "(x)",  colors[i-1]);
+       addaccDataset(ydata_true[i], 'Måling '+String(i+1)+ "(y)",  colors[i-1]);
+    } 
+    //addaccDataset(y_acc_arr, 'y',  '#ac3b61');
+    //addaccDataset(z_acc_arr, 'z',  '#84acb1');
+    // addDataset(date[2], 'data2', '#84acb1')
+    // addDataset(data[2], 'data2', '#84acb1')
+
+
+    var ctx_vel = document.getElementById('velChart').getContext('2d');
+    var data_vel = {
+      labels: time,
+      datasets: [{
+        pointHoverRadius: 1,
+        pointRadius: 1,
+        fill: false,
+        label: "Måling 1 (x)",
+        backgroundColor: 
+          '#017aa0',
+        borderColor: 
+          '#017aa0',
+        borderWidth: 2,
+        data: vel_x_arr[0],
+      }]
+    };
+
+    var velChart = new Chart(ctx_vel,{
+      type: "line",
+      data: data_vel,
+        options:{
+          title: {
+            display: true,
+            text: 'Fart',
+            fontSize: 25 
+          },
+
+          maintainAspectRatio: false,
+          scales: {
+            xAxes: [{
+              display:true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Tid [s]',
+                fontSize: 20
+              }
+            }],
+
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              },
+              display:true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Fart [m/s]',
+                fontSize: 20
+              }
+            }], 
+          }
+        }
+    });
+
+
+
+    // You create the new dataset `Vendas` with new data and color to differentiate
+    function addVelDataset(arr, name="default", color='#017aa0') {
+      var newDataset = {
+          fill: false,
+          pointHoverRadius: 1.5,
+          pointRadius: 1.5,
+          label: name,
+          backgroundColor: color,
+          borderColor: color,
+          borderWidth: 2,
+          data: arr,
+      }
+
+      // You add the newly created dataset to the list of `data`
+      data_vel.datasets.push(newDataset);
+      // You update the chart to take into account the new dataset
+      velChart.update();
+    }
+    //var colors = ['#ac3b61', '#84acb1', '#eee2dc', '#123c69', '#017aa0', '#bbb2b5', '#d7a08b', '#bcb1b7']; 
+    addVelDataset(vel_y_arr[0], 'Måling '+String(1) + " (y)",  "#017aa0");
+
+    for (i = 1; i < vel_x_arr.length; i++) {
+       addVelDataset(vel_x_arr[i], 'Måling '+String(i+1) + " (x)",  colors[i-1]);
+       addVelDataset(vel_y_arr[i], 'Måling '+String(i+1) + " (y)",  colors[i-1]);
+    } 
+
+    card=document.querySelector("#vel_card");
+
+    // Algoritme sluttverdi
+    for (i = 0; i < vel_arr.length; i++) {
+      var max_i = vel_arr[i].reduce(function(a, b) {
+        return Math.max(a, b);
+      });
+
+      console.log(max_i)
+      var li_card=document.createElement("li");
+      li_card.setAttribute("class", "list-group-item");
+      li_card.innerHTML="Måling " + String(i+1) + ": " + max_i.toFixed(2) + " m/s";
+      //<li class="list-group-item">Måling 1: 2.1 m/s</li>
+      card.appendChild(li_card);
+    } 
+
+
+    // for (i = 1; i < date.length; i++) {
+      // addDataset(accdata_last, 'data'+i,  colors[i-1]);
+    //} 
+    // addDataset(date[1], 'data1',  '#ac3b61');
+    // addDataset(date[2], 'data2', '#84acb1')
+    // addDataset(data[2], 'data2', '#84acb1')
+
+    /*function find_acc(xdata, ydata, zdata) {
+      var h=0;
+      for (var i = 1; i <xdata.length; i++) {
+        var xdata_i=xdata[i][0].split(',');
+        var ydata_i=ydata[i][0].split(',');
+        var zdata_i=zdata[i][0].split(',');
+        console.log(xdata_i);
+        console.log(xdata.length);
+                
+        var xdata_i_true = xdata_i.map(function(element) {
+          return Number.parseInt(element,16)*0.00059857; // 9.807/16384
+          //return Number.parseInt(element,16);
+        });
+
+        var ydata_i_true = ydata_i.map(function(element) {
+          return Number.parseInt(element,16)*0.00059857; // 9.807/16384
+          //return Number.parseInt(element,16);
+        });
+
+        var zdata_i_true = zdata_i.map(function(element) {
+          return Number.parseInt(element,16)*0.00059857; // 9.807/16384
+          //return Number.parseInt(element,16);
+        });
+      }
+    }
+
+  find_acc(xdata, ydata, zdata);*/
+
+  
+
+  </script>
+</body>
+{% endblock %}

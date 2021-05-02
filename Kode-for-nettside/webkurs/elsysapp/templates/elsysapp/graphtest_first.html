@@ -1,0 +1,343 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+  <title>sanntid</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+
+  <a href="https://gruppe11.innovasjon.ed.ntnu.no/elsysapp/sanntid/" target="_blank" id="sing_sanntid"><button type="button" name="button">Oppdater ny måling</button> </a>
+  <a href="https://gruppe11.innovasjon.ed.ntnu.no/elsysapp/sanntid/" target="_blank" id="mult_sanntid"><button type="button" name="button">Oppdater flere målinger</button> </a>
+
+    <div style="margin:auto; width:50%;padding:10px;display: flex;flex-direction:column;text-align:center;justify-content: center;align-items:center;padding-bottom:30px;">
+    <h2>Sluttfart</h2>
+    <div class="card" style="width: 18rem;" >
+    <ul class="list-group list-group-flush" id="vel_card">
+        {% comment %}<li class="list-group-item">Måling 1: 1.23 m/s</li>
+        <li class="list-group-item">Måling 2: 1.8 m/s</li>
+        <li class="list-group-item">måling 3: 1.8 m/s</li> {% endcomment %}
+    </ul>
+    </div>
+    </div>
+
+  <div class="chart-container" style="margin:auto;width:85%;height:550px;padding-bottom:20px;border:10px">
+  <canvas id="velChart"></canvas>
+  </div>
+
+  <div class="chart-container" style="margin:auto;width:85%;height:550px;">
+  <canvas id="accChart"></canvas>
+  </div>
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script type="text/javascript">
+   // <link rel="stylesheet" href="{% static 'graphtest.css' %}">
+
+  var body=document.querySelector("body");
+  console.log(body);
+  var ul=document.createElement("ul");
+  var br=document.createElement("br");
+
+//hente data
+  var xdata = (JSON.parse("{{xdata|escapejs}}"))["xdata"]; 
+  console.log(xdata);
+  var ydata = (JSON.parse("{{ydata|escapejs}}"))["ydata"]; 
+  console.log(ydata);
+  var zdata = (JSON.parse("{{zdata|escapejs}}"))["zdata"];
+  console.log(zdata);
+  var date = (JSON.parse("{{timestamp|escapejs}}"))["date"];
+  console.log(date);
+  var last_id=(JSON.parse("{{id|escapejs}}"))["id"][0];
+  console.log(last_id);
+
+
+  var link_el=document.querySelector("#mult_sanntid");
+  var link_str="https://gruppe11.innovasjon.ed.ntnu.no/elsysapp/sanntid/"+String(last_id)+"_";
+  link_str+="/";
+  console.log(link_str);
+  link_el.setAttribute("href", link_str); 
+
+
+  var xdata_arr=xdata[0][0].split(',');
+  var ydata_arr=ydata[0][0].split(',');
+  var zdata_arr=zdata[0][0].split(',');
+  
+  var g=9.81;
+  var s=8192;
+
+  
+    var xdata_true = xdata_arr.map(function(element) {
+      return Number.parseInt(element,16)*g/s; // 9.807/16384
+      //return Number.parseInt(element,16);
+    });
+
+    var ydata_true = ydata_arr.map(function(element) {
+      return Number.parseInt(element,16)*g/s; // 9.807/16384
+      //return Number.parseInt(element,16);
+    });
+
+    var zdata_true = zdata_arr.map(function(element) {
+      return Number.parseInt(element,16)*g/s; // 9.807/16384
+      //return Number.parseInt(element,16);
+    });
+
+  var f=62.5;
+  var vel_x_arr=[0]
+  var vel_y_arr=[0]
+  var vel_z_arr=[0]
+  var k=1;
+  for (var j = 0; j <xdata_true.length; j++) {
+    vel_x_arr.push(vel_x_arr[k-1]+xdata_true[j]/f);
+    vel_y_arr.push(vel_y_arr[k-1]+ydata_true[j]/f);
+    vel_z_arr.push(vel_z_arr[k-1]+zdata_true[j]/f);
+    k+=1;
+  }
+
+
+
+
+
+
+//lage tidsakse, må gange med noe, kanskje 0.01257142857? mest sannsynlig ikke, kanskje dele på 62.5
+  time=[]
+  for (var i = 0; i <xdata_true.length; i++) {
+    time.push((i/62.5).toFixed(1)) // ganger dette med en konstant
+  }
+  console.log("time: " + time);
+
+  xdata_true = xdata_true.map(function(element) {
+    return Number.parseFloat(element).toFixed(4);
+  });
+
+  ydata_true = ydata_true.map(function(element) {
+    return Number.parseFloat(element).toFixed(4); // 9.807/16384
+  });
+
+    vel_x_arr = vel_x_arr.map(function(element) {
+    return Number.parseFloat(element).toFixed(4); // 9.807/16384
+  });
+
+  vel_y_arr = vel_y_arr.map(function(element) {
+    return Number.parseFloat(element).toFixed(4); // 9.807/16384
+  });
+
+
+  {% comment %} y_vel_arr = y_vel_arr.map(function(element) {
+    return Number.parseFloat(element).toFixed(4); // 9.807/16384
+    //return Number.parseInt(element,16);
+  }); {% endcomment %}
+
+
+
+  var vel_arr=[];
+  for (var j = 0; j <vel_x_arr.length; j++) {
+    vel_arr.push(Math.sqrt(vel_x_arr[j]*vel_x_arr[j]+vel_y_arr[j]*vel_y_arr[j]));
+  }
+
+
+
+
+
+    var ctx_acc = document.getElementById('accChart').getContext('2d');
+    
+    var data_acc = {
+      labels: time,
+      datasets: [{
+        pointHoverRadius: 1.5,
+        pointRadius: 1.5,
+        fill: false,
+        label: "Måling 1 (x)",
+        backgroundColor: 
+          '#017aa0',
+        borderColor: 
+          '#017aa0',
+        borderWidth: 2,
+        data: xdata_true,
+      }]
+    };
+
+    var accChart = new Chart(ctx_acc,{
+      type: "line",
+      data: data_acc,
+        options:{
+          title: {
+            display: true,
+            text: 'Akselerasjon',
+            fontSize: 25 
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            xAxes: [{
+              display:true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Tid [s]',
+                fontSize: 20
+              }
+            }],
+
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              },
+              display:true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Akselerasjon [m/s²]',
+                fontSize: 20
+              }
+            }], 
+
+          }
+        }
+    });
+        // You create the new dataset `Vendas` with new data and color to differentiate
+    function addaccDataset(arr, name="default", color='#017aa0') {
+      var newDataset = {
+          fill: false,
+          pointHoverRadius: 1,
+          pointRadius: 1,
+          label: name,
+          backgroundColor: color,
+          borderColor: color,
+          borderWidth: 2,
+          data: arr,
+      }
+
+      // You add the newly created dataset to the list of `data`
+      data_acc.datasets.push(newDataset);
+      // You update the chart to take into account the new dataset
+      accChart.update();
+    }
+    var colors = ['#ac3b61', '#84acb1', '#eee2dc', '#123c69', '#017aa0', '#bbb2b5', '#d7a08b', '#bcb1b7']; 
+    addaccDataset(ydata_true, 'Måling '+String(1)+ " (y)",  "#017aa0");
+
+    //var i;
+    //for (i = 1; i < date.length; i++) {
+      // addDataset(accdata_last, 'data'+i,  colors[i-1]);
+    //} 
+    {% comment %} addaccDataset(x_acc_arr, 'y',  '#ac3b61'); {% endcomment %}
+    {% comment %} addaccDataset(z_acc_arr, 'z',  '#84acb1'); {% endcomment %}
+    // addDataset(date[2], 'data2', '#84acb1')
+    // addDataset(data[2], 'data2', '#84acb1')
+
+
+
+
+
+    var ctx_vel = document.getElementById('velChart').getContext('2d');
+    var data_vel = {
+      labels: time,
+      datasets: [{
+        pointHoverRadius: 1,
+        pointRadius: 1,
+        fill: false,
+        label: "Måling 1 (x)",
+        backgroundColor: 
+          '#017aa0',
+        borderColor: 
+          '#017aa0',
+        borderWidth: 2,
+        data: vel_x_arr,
+      }]
+    };
+
+    var velChart = new Chart(ctx_vel,{
+      type: "line",
+      data: data_vel,
+        options:{
+          title: {
+            display: true,
+            text: 'Fart',
+            fontSize: 25 
+          },
+
+          maintainAspectRatio: false,
+          scales: {
+            xAxes: [{
+              display:true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Tid [s]',
+                fontSize: 20
+              }
+            }],
+
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              },
+              display:true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Fart [m/s]',
+                fontSize: 20
+              }
+            }], 
+
+          }
+        }
+    });
+
+
+
+    // You create the new dataset `Vendas` with new data and color to differentiate
+    function addVelDataset(arr, name="default", color='#017aa0') {
+      var newDataset = {
+          fill: false,
+          pointHoverRadius: 1.5,
+          pointRadius: 1.5,
+          label: name,
+          backgroundColor: color,
+          borderColor: color,
+          borderWidth: 2,
+          data: arr,
+      }
+
+      // You add the newly created dataset to the list of `data`
+      data_vel.datasets.push(newDataset);
+      // You update the chart to take into account the new dataset
+      velChart.update();
+    }
+    var colors = ['#ac3b61', '#84acb1', '#eee2dc', '#123c69', '#017aa0', '#bbb2b5', '#d7a08b', '#bcb1b7']; 
+    addVelDataset(vel_y_arr, 'Måling '+String(1) + "(y)",  "#017aa0");
+
+    var max_i = vel_arr.reduce(function(a, b) {
+        return Math.max(a, b);
+    });
+
+    card=document.querySelector("#vel_card");
+    console.log(max_i)
+    var li_card=document.createElement("li");
+    li_card.setAttribute("class", "list-group-item");
+    li_card.innerHTML="Måling " + String(1) + ": " + max_i.toFixed(2) + "  m/s";
+    //li_card.innerHTML="Måling " + String(i+1) + ": " + max_i + "m/s";
+    //<li class="list-group-item">Måling 1: 2.1 m/s</li>
+    card.appendChild(li_card);
+
+
+
+    //var i;
+    //for (i = 1; i < date.length; i++) {
+      // addDataset(accdata_last, 'data'+i,  colors[i-1]);
+    //} 
+    
+    
+    {% comment %} addVelDataset(x_vel_arr, 'y',  '#ac3b61'); {% endcomment %}
+    {% comment %} addVelDataset(z_vel_arr, 'z',  '#84acb1'); {% endcomment %}
+    
+    
+    
+    
+    // addDataset(date[2], 'data2', '#84acb1')
+    // addDataset(data[2], 'data2', '#84acb1')
+
+
+  </script>
+</body>
+{% endblock %}
